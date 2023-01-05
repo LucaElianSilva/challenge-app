@@ -4,8 +4,8 @@ import StockManagement from './Components/StockManagement';
 
 function App() {
   return (
-    <Fragment>
-      <StockManagement />
+      <Fragment>
+          <StockManagement />
     </Fragment>
   );
 }

@@ -1,11 +1,18 @@
 .container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    padding: 10px;
 }
 
 .filter-container {
-    width: 100%;
+    width: 200px;
 }
 
 .filter {
     width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #D3CFCD;
+    border-radius: 4px;
 }
