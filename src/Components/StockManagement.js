@@ -3,12 +3,12 @@ import styles from "../Styles/StockManagement.module.css";
 import { GridTable } from "./GridTable";
 
 const StockManagement = () => {
-    const columns = ["Id", "Precio", "Fecha de Carga", "Categoría"];
+    const columns = ["Id", "Nombre", "Precio", "Fecha de Carga", "Categoría"];
     const [rows, setRows] = useState([]);
     const [productos, setProductos] = useState([]);
-    const [presupuesto, setPresupuesto] = useState(null);
-    const [resultado, setResultado] = useState({montoTotal: null, productos:[]});
-    
+    const [presupuesto, setPresupuesto] = useState(0);
+    const [resultado, setResultado] = useState({montoTotal: 0, productos:[]});
+    const [invalidFilter, setInvalidFilter] = useState(false);
     function GetProductos() {
         var data = [
             {Id: 1, Nombre:"Prod 1", Precio: 5, FechaCarga:"26/10/2019", Categoria:"Produno"},
@@ -21,9 +21,22 @@ const StockManagement = () => {
         setRows(data);
     }
 
+    function validarInput(e){
+        const esValido = e.target.validity.valid;
+        if (esValido) {
+            setInvalidFilter(false);
+            GetProductosByMontoCliente(e);
+        }
+        else{
+            setInvalidFilter(true);
+            setRows([]);
+        }
+    }
+
     function GetProductoPrecioMayor(prods){
         var precio = 0;
         var prod = null;
+
         prods.forEach(function(value){
             if(value > precio){
                 precio = value;
@@ -37,21 +50,36 @@ const StockManagement = () => {
     }
     
     function GetProductosByMontoCliente(e){
-        var presupuesto = e.target.value;
-        var productosFiltrados = productos.filter(x => x.Precio < presupuesto);
-        var productosProddos = productosFiltrados.filter(x => x.Categoria === "Proddos");
-        var productosProduno = productosFiltrados.filter(x => x.Categoria === "Produno");
-        var prodMayorPrecio = GetProductoPrecioMayor(productosProddos);
+        var productosFiltrados = productos.filter(x => x.Precio < e.target.value);
+        const productosProddos = productosFiltrados.filter(x => x.Categoria === "Proddos");
+        const productosProduno = productosFiltrados.filter(x => x.Categoria === "Produno");
 
-        productosProduno.forEach(function(value){
-            var suma = (prodMayorPrecio.Precio + value.Precio);
-            if(suma <= presupuesto){
-                setResultado({montoTotal: suma, productos: [value.Nombre, prodMayorPrecio.Nombre]});
+        if(productosProddos.length !== 0){
+            var prodMayorPrecio = GetProductoPrecioMayor(productosProddos);
+            var total = 0;
+
+            productosProduno.forEach(function(value){
+                if((prodMayorPrecio.Precio + value.Precio) <= e.target.value){
+                    total = (prodMayorPrecio.Precio + value.Precio);
+                    setResultado({montoTotal: total, productos: [value.Nombre, prodMayorPrecio.Nombre]});
+                }
+            });  
+
+            if(total <= e.target.value){
+                setPresupuesto(e.target.value);
+                setRows(productosFiltrados);
             }
-        });  
-
-        setPresupuesto(e.target.value);
-        setRows(productosFiltrados);
+            else {
+                setPresupuesto(e.target.value);
+                setResultado({montoTotal: 0, productos: []});
+                setRows([]);
+            }
+        }
+        else {
+            setPresupuesto(e.target.value);
+            setRows([]);
+            setResultado({montoTotal: 0, productos: []});
+        }
     }
 
     useEffect(()=>{
@@ -61,20 +89,12 @@ const StockManagement = () => {
     return (
         <div className={styles.container}>
             <div className={styles["filter-container"]}>
-                <input type="text" className={styles.filter} onChange={(e)=> GetProductosByMontoCliente(e)}/>
+                <input type="number" className={!invalidFilter ? styles.filter : styles["invalid-filter"]} 
+                pattern="[0-9]{0,7}" onChange={(e)=> validarInput(e)} maxLength="7"/>
+                { !invalidFilter ? <></> : <p className={styles.invalid}>Solo se aceptan enteros</p>}
             </div>
-            <GridTable columns={columns} rows={rows}/>
-            {
-                <div className={styles["result-container"]}>
-                    <p>Presupuesto: {rows.length > 0 ? presupuesto : null}</p>
-                    <p>Productos Recomendados: 
-                        {rows.length > 0 
-                        ? resultado.productos.map((item) => <li>{item}</li>) 
-                        : null}
-                    </p>
-                    <p>Monto Total: {rows.length > 0 ? resultado.montoTotal : null}</p>
-                </div>
-            }
+            <GridTable columns={columns} rows={rows} presupuesto={presupuesto} 
+            prodsRecomendados={resultado.productos} total={resultado.montoTotal}/>
         </div>
     );
 };
