@@ -27,7 +27,8 @@
     width: 200px;
     padding: 10px;
     text-align: left;
-    background-color: #cde8ff;
+    background-color: #87c8ff;
+    color: #fff;
 }
 
 .row {
@@ -38,5 +39,6 @@
 
 .empty-grid {
     text-align: center;
-    padding: 5px;
+    padding: 10px;
+    background-color: #f0f8ff;
 }
