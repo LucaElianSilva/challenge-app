@@ -20,11 +20,11 @@ export const GridTable = (props) => {
                         </tr>:
                         props.rows.map((item) =>
                         <tr>
-                            <td className={styles.row}>{item.Id}</td>
-                            <td className={styles.row}>{item.Nombre}</td>
-                            <td className={styles.row}>${item.Precio}</td>
-                            <td className={styles.row}>{item.FechaCarga}</td>
-                            <td className={styles.row}>{item.Categoria}</td>
+                            <td className={styles.row}>{item.id}</td>
+                            <td className={styles.row}>{item.nombre}</td>
+                            <td className={styles.row}>${item.precio}</td>
+                            <td className={styles.row}>{new Date(item.fechaCarga).toLocaleDateString()}</td>
+                            <td className={styles.row}>{item.categoria === 0 ? "PRODDOS" : "PRODUNO"}</td>
                         </tr>
                         )}
                 </tbody>

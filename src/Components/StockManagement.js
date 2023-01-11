@@ -1,24 +1,36 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styles from "../Styles/StockManagement.module.css";
 import { GridTable } from "./GridTable";
 
 const StockManagement = () => {
+    const port = "https://localhost:7230";
     const columns = ["Id", "Nombre", "Precio", "Fecha de Carga", "Categoría"];
     const [rows, setRows] = useState([]);
     const [productos, setProductos] = useState([]);
     const [presupuesto, setPresupuesto] = useState(0);
     const [resultado, setResultado] = useState({montoTotal: 0, productos:[]});
     const [invalidFilter, setInvalidFilter] = useState(false);
-    function GetProductos() {
-        var data = [
-            {Id: 1, Nombre:"Prod 1", Precio: 5, FechaCarga:"26/10/2019", Categoria:"Produno"},
-            {Id: 2, Nombre:"Prod 2", Precio: 10, FechaCarga:"25/10/2019", Categoria:"Proddos"},
-            {Id: 3, Nombre:"Prod 3", Precio: 15, FechaCarga:"26/10/2019", Categoria:"Produno"},
-            {Id: 4, Nombre:"Prod 4", Precio: 20, FechaCarga:"27/10/2019", Categoria:"Produno"},
-            {Id: 5, Nombre:"Prod 5", Precio: 25, FechaCarga:"28/10/2019", Categoria:"Proddos"},
-        ];
-        setProductos(data);
-        setRows(data);
+
+    const GetProductos = async() => {
+        try {
+            const response = axios({
+                method: "GET",
+                url: port + "/Producto/GetProductos",
+                headers: {
+                    'Content-Type': 'application/json',
+                  },
+            }).then((r) => {
+                setProductos(r.data);
+                setRows(r.data);
+            });
+
+            if (!response.ok) {
+                throw new Error('Request failed!');
+            }
+          } catch (err) {
+            
+          }
     }
 
     function validarInput(e){
@@ -50,18 +62,19 @@ const StockManagement = () => {
     }
     
     function GetProductosByMontoCliente(e){
-        var productosFiltrados = productos.filter(x => x.Precio < e.target.value);
-        const productosProddos = productosFiltrados.filter(x => x.Categoria === "Proddos");
-        const productosProduno = productosFiltrados.filter(x => x.Categoria === "Produno");
+        debugger;
+        var productosFiltrados = productos.filter(x => x.precio < e.target.value);
+        const productosProddos = productosFiltrados.filter(x => x.categoria === 0);
+        const productosProduno = productosFiltrados.filter(x => x.categoria === 1);
 
         if(productosProddos.length !== 0){
             var prodMayorPrecio = GetProductoPrecioMayor(productosProddos);
             var total = 0;
 
             productosProduno.forEach(function(value){
-                if((prodMayorPrecio.Precio + value.Precio) <= e.target.value){
-                    total = (prodMayorPrecio.Precio + value.Precio);
-                    setResultado({montoTotal: total, productos: [value.Nombre, prodMayorPrecio.Nombre]});
+                if((prodMayorPrecio.precio + value.precio) <= e.target.value){
+                    total = (prodMayorPrecio.precio + value.precio);
+                    setResultado({montoTotal: total, productos: [value.nombre, prodMayorPrecio.nombre]});
                 }
             });  
 
