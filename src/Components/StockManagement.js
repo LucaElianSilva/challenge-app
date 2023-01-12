@@ -9,7 +9,7 @@ const StockManagement = () => {
     const [rows, setRows] = useState([]);
     const [productos, setProductos] = useState([]);
     const [presupuesto, setPresupuesto] = useState(0);
-    const [resultado, setResultado] = useState({montoTotal: 0, productos:[]});
+    const [resultado, setResultado] = useState({montoTotal: "", productos:[]});
     const [invalidFilter, setInvalidFilter] = useState(false);
 
     const GetProductos = async() => {
@@ -62,7 +62,6 @@ const StockManagement = () => {
     }
     
     function GetProductosByMontoCliente(e){
-        debugger;
         var productosFiltrados = productos.filter(x => x.precio < e.target.value);
         const productosProddos = productosFiltrados.filter(x => x.categoria === 0);
         const productosProduno = productosFiltrados.filter(x => x.categoria === 1);
@@ -78,20 +77,20 @@ const StockManagement = () => {
                 }
             });  
 
-            if(total <= e.target.value){
+            if(total <= e.target.value && total !== 0){
                 setPresupuesto(e.target.value);
                 setRows(productosFiltrados);
             }
             else {
                 setPresupuesto(e.target.value);
-                setResultado({montoTotal: 0, productos: []});
+                setResultado({montoTotal: "", productos: []});
                 setRows([]);
             }
         }
         else {
             setPresupuesto(e.target.value);
             setRows([]);
-            setResultado({montoTotal: 0, productos: []});
+            setResultado({montoTotal: "", productos: []});
         }
     }
 
