@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Port } from "../Constants";
 import styles from "../Styles/StockManagement.module.css";
 import { GridTable } from "./GridTable";
 
 const StockManagement = () => {
-    const port = "https://localhost:7230";
     const columns = ["Id", "Nombre", "Precio", "Fecha de Carga", "Categoría"];
     const [rows, setRows] = useState([]);
     const [productos, setProductos] = useState([]);
@@ -16,7 +16,7 @@ const StockManagement = () => {
         try {
             const response = axios({
                 method: "GET",
-                url: port + "/Producto/GetProductos",
+                url: Port + "/Producto/GetProductos",
                 headers: {
                     'Content-Type': 'application/json',
                   },
