@@ -99,14 +99,19 @@ const StockManagement = () => {
     }, []);
 
     return (
-        <div className={styles.container}>
-            <div className={styles["filter-container"]}>
-                <input type="text" className={!invalidFilter ? styles.filter : styles["invalid-filter"]} 
-                pattern="[0-9]{0,7}" onChange={(e)=> validarInput(e)} maxLength="7"/>
-                { !invalidFilter ? <></> : <p className={styles.invalid}>Solo se aceptan enteros</p>}
+        <div className={styles["father-container"]}>
+            <div className={styles.container}>
+                <div className={styles["child-container"]}>
+                    <div className={styles["filter-container"]}>
+                        <input type="text" placeholder="Ingrese presupuesto" 
+                        className={!invalidFilter ? styles.filter : styles["invalid-filter"]} 
+                        pattern="[0-9]{0,7}" onChange={(e)=> validarInput(e)} maxLength="7"/>
+                        {!invalidFilter ? <></> : <p className={styles.invalid}>Solo se aceptan enteros</p>}
+                    </div>
+                    <GridTable columns={columns} rows={rows} presupuesto={presupuesto} 
+                    prodsRecomendados={resultado.productos} total={resultado.montoTotal}/>
+                </div>
             </div>
-            <GridTable columns={columns} rows={rows} presupuesto={presupuesto} 
-            prodsRecomendados={resultado.productos} total={resultado.montoTotal}/>
         </div>
     );
 };

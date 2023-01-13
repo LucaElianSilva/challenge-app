@@ -7,14 +7,18 @@
 }
 
 .table {
-    width: 50%;
+    width: 70%;
     border-spacing: 0;
+}
+
+td, th{
+   font-family: 'Roboto', sans-serif;
 }
 
 .result-table-container {
     display: flex;
     justify-content: flex-start;
-    width: 50%;
+    width: 70%;
 }
 
 .result-table {
@@ -26,6 +30,8 @@
 .column {
     width: 200px;
     padding: 10px;
+    letter-spacing: 2px;
+    font-weight: 500;
     text-align: left;
     background-color: #87c8ff;
     color: #fff;
@@ -34,11 +40,25 @@
 .row {
     width: 200px;
     padding: 10px;
+    font-weight: 400;
     background-color: #f0f8ff;
+}
+.row, .column, .empty-grid {
+   font-family: 'Roboto', sans-serif;
 }
 
 .empty-grid {
     text-align: center;
     padding: 10px;
     background-color: #f0f8ff;
+}
+
+@media screen and (max-width: 1024px) {
+    .table {
+        width: 100%;
+    }
+
+    .result-table-container {
+        width: 100%;
+    }
 }
