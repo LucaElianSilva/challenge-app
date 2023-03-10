@@ -1,11 +1,11 @@
 import React, {Fragment} from 'react';
 import './App.css';
-import StockManagement from './Components/StockManagement';
+import Persona from './Components/Persona';
 
 function App() {
   return (
       <Fragment>
-          <StockManagement />
+          <Persona />
     </Fragment>
   );
 }
